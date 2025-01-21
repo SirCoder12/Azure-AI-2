@@ -784,41 +784,7 @@ async def delete_all_conversations():
 
 @bp.route("/history/clear", methods=["POST"])
 async def clear_messages():
-    await cosmos_db_ready.wait()
-    ## get the user id from the request headers
-    authenticated_user = get_authenticated_user_details(request_headers=request.headers)
-    user_id = authenticated_user["user_principal_id"]
-
-    ## check request for conversation_id
-    request_json = await request.get_json()
-    conversation_id = request_json.get("conversation_id", None)
-
-    try:
-        if not conversation_id:
-            return jsonify({"error": "conversation_id is required"}), 400
-
-        ## make sure cosmos is configured
-        if not current_app.cosmos_conversation_client:
-            raise Exception("CosmosDB is not configured or not working")
-
-        ## delete the conversation messages from cosmos
-        deleted_messages = await current_app.cosmos_conversation_client.delete_messages(
-            conversation_id, user_id
-        )
-
-        return (
-            jsonify(
-                {
-                    "message": "Successfully deleted messages in conversation",
-                    "conversation_id": conversation_id,
-                }
-            ),
-            200,
-        )
-    except Exception as e:
-        logging.exception("Exception in /history/clear_messages")
-        return jsonify({"error": str(e)}), 500
-
+    exit()
 
 @bp.route("/history/ensure", methods=["GET"])
 async def ensure_cosmos():

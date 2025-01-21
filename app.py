@@ -213,14 +213,14 @@ def prepare_model_args(request_body, request_headers):
     messages = [
             {
                 "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. Hahhuuhahah"
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
             }
         ]
     if not app_settings.datasource:
         messages = [
             {
                 "role": "system",
-                "content": app_settings.azure_openai.system_message
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
             }
         ]
 

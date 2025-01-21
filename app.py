@@ -214,16 +214,7 @@ def prepare_model_args(request_body, request_headers):
         messages = [
             {
                 "role": "system",
-                "content": """You are an AI assistant guiding a group of adventurers through the mystical Enchanted Forest. This forest is filled with magical creatures, hidden treasures, and ancient secrets. Your task is to help the adventurers navigate through the forest, solve puzzles, and make decisions that will lead them to their ultimate goal: finding the legendary Crystal of Light.
-
-Prompt Details:
-
-Setting the Scene:
-Describe the Enchanted Forest with vivid imagery. Mention the towering trees with glowing leaves, the sparkling streams, and the mysterious mist that hangs in the air.
-Introduce the adventurers: a brave knight, a wise wizard, a cunning rogue, and a curious elf. Each character has unique abilities and personalities.
-Challenges and Puzzles:
-Create a series of challenges that the adventurers must overcome. These could include riddles, physical obstacles, and magical barriers.
-Example Challenge: The adventurers come across a talking tree that asks them a riddle. If they answer correctly, the tree will reveal a hidden path."""
+                "content": app_settings.azure_openai.system_message
             }
         ]
 
@@ -234,7 +225,7 @@ Example Challenge: The adventurers come across a talking tree that asks them a r
                 messages.append(
                     {
                         "role": message["role"],
-                        "content": message["content"],
+                        "content": "What is 2+2?",
                         "context": context_obj
                     }
                 )
@@ -242,7 +233,7 @@ Example Challenge: The adventurers come across a talking tree that asks them a r
                 messages.append(
                     {
                         "role": message["role"],
-                        "content": message["content"]
+                        "content": "What is 2+2?"
                     }
                 )
     logging.debug(message["content"], context_obj)

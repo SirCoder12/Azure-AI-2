@@ -16,11 +16,6 @@ from quart import (
     render_template,
     current_app,
 )
-@app.route('/submit', methods=['POST'])
-def submit():
-    selected_option = request.form.get('dropdown')
-    return f'You selected: {selected_option}'
-
 
 from openai import AsyncAzureOpenAI
 from azure.identity.aio import (
@@ -71,7 +66,6 @@ async def index():
         "index.html",
         title=app_settings.ui.title,
         favicon=app_settings.ui.favicon
-        options=['Option 1', 'Option 2', 'Option 3']
     )
 
 
@@ -85,8 +79,10 @@ async def assets(path):
     return await send_from_directory("static/assets", path)
 
 
-
-logging.basicConfig(level=logging.DEBUG)
+# Debug settings
+DEBUG = os.environ.get("DEBUG", "false")
+if DEBUG.lower() == "true":
+    logging.basicConfig(level=logging.DEBUG)
 
 USER_AGENT = "GitHubSampleWebApp/AsyncAzureOpenAI/1.0.0"
 
@@ -214,11 +210,12 @@ async def init_cosmosdb_client():
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
     messages = []
+
     if not app_settings.datasource:
         messages = [
             {
                 "role": "system",
-                "content": app_settings.azure_openai.system_message
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
             }
         ]
 
@@ -233,7 +230,7 @@ def prepare_model_args(request_body, request_headers):
                         "context": context_obj
                     }
                 )
-
+                logging.debug(message["content"], context_obj)
             else:
                 messages.append(
                     {
@@ -241,6 +238,14 @@ def prepare_model_args(request_body, request_headers):
                         "content": message["content"]
                     }
                 )
+        logging.error(messages)
+        messages.append(
+            {
+                "role": "system",
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah. You know that 1+1 is 2"
+            })
+        
+
 
     user_json = None
     if (MS_DEFENDER_ENABLED):
@@ -359,7 +364,6 @@ async def send_chat_request(request_body, request_headers):
     except Exception as e:
         logging.exception("Exception in send_chat_request")
         raise e
-    logging.debug(**model_args)
 
     return response, apim_request_id
 
@@ -888,7 +892,5 @@ async def generate_title(conversation_messages) -> str:
         logging.exception("Exception while generating title", e)
         return messages[-2]["content"]
 
-print("haa")
-logging.error("hhha")
-logging.debug("FUDFGDSIDSGFZUIFZGUDFZGUDFZGUSZGFUSDGDZFUGDZFUSDZGFUSGDZFU")
+
 app = create_app()

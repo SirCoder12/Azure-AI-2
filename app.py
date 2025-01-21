@@ -243,6 +243,14 @@ def prepare_model_args(request_body, request_headers):
                         "content": message["content"]
                     }
                 )
+        logging.error(messages)
+        messages.append(
+            {
+                "role": "system",
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
+            })
+
+
 
     user_json = None
     if (MS_DEFENDER_ENABLED):

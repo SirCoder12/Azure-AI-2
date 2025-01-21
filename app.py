@@ -79,10 +79,8 @@ async def assets(path):
     return await send_from_directory("static/assets", path)
 
 
-# Debug settings
-DEBUG = os.environ.get("DEBUG", "false")
-if DEBUG.lower() == "true":
-    logging.basicConfig(level=logging.DEBUG)
+
+logging.basicConfig(level=logging.DEBUG)
 
 USER_AGENT = "GitHubSampleWebApp/AsyncAzureOpenAI/1.0.0"
 
@@ -210,17 +208,11 @@ async def init_cosmosdb_client():
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
     messages = []
-    messages = [
-            {
-                "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
-            }
-        ]
     if not app_settings.datasource:
         messages = [
             {
                 "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
+                "content": app_settings.azure_openai.system_message
             }
         ]
 
@@ -235,7 +227,7 @@ def prepare_model_args(request_body, request_headers):
                         "context": context_obj
                     }
                 )
-                logging.debug(message["content"], context_obj)
+
             else:
                 messages.append(
                     {
@@ -243,17 +235,6 @@ def prepare_model_args(request_body, request_headers):
                         "content": message["content"]
                     }
                 )
-        logging.error(f"{messages} HHHHH")
-        import sys
-        print("HHHDHDHDHDHHDH", file=sys.stderr)
-        
-        messages.append(
-            {
-                "role": "system",
-                "content": "You are an AI assistent, that always says GGGHAHA after every prompt"
-            })
-
-
 
     user_json = None
     if (MS_DEFENDER_ENABLED):

@@ -208,7 +208,6 @@ async def init_cosmosdb_client():
 
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
-    app_settings.azure_openai.system_message = "You are an AI assistent named Charles. You know that 1+1 is 3"
     messages = []
     if not app_settings.datasource:
         messages = [
@@ -882,5 +881,5 @@ async def generate_title(conversation_messages) -> str:
         logging.exception("Exception while generating title", e)
         return messages[-2]["content"]
 
-
+app_settings.azure_openai.system_message = "You are an AI assistent named Charles. You know that 1+1 = 3"
 app = create_app()

@@ -9,14 +9,5 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
-    <form action="/submit" method="post">
-        <label for="dropdown">Choose an option:</label>
-        <select name="dropdown" id="dropdown">
-            {% for option in options %}
-                <option value="{{ option }}">{{ option }}</option>
-            {% endfor %}
-        </select>
-        <button type="submit">Submit</button>
-    </form>
   </body>
 </html>

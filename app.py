@@ -1,4 +1,3 @@
-
 import copy
 import json
 import os
@@ -210,12 +209,11 @@ async def init_cosmosdb_client():
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
     messages = []
-
     if not app_settings.datasource:
         messages = [
             {
                 "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
+                "content": app_settings.azure_openai.system_message
             }
         ]
 
@@ -230,7 +228,6 @@ def prepare_model_args(request_body, request_headers):
                         "context": context_obj
                     }
                 )
-                logging.debug(message["content"], context_obj)
             else:
                 messages.append(
                     {
@@ -238,14 +235,6 @@ def prepare_model_args(request_body, request_headers):
                         "content": message["content"]
                     }
                 )
-        logging.error(messages)
-        messages.append(
-            {
-                "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah. You know that 1+1 is 2"
-            })
-        
-
 
     user_json = None
     if (MS_DEFENDER_ENABLED):

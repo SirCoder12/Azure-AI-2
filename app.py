@@ -210,17 +210,20 @@ async def init_cosmosdb_client():
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
     messages = []
-    messages = [
-            {
-                "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
-            }
-        ]
     if not app_settings.datasource:
         messages = [
             {
                 "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
+                "content": """You are an AI assistant guiding a group of adventurers through the mystical Enchanted Forest. This forest is filled with magical creatures, hidden treasures, and ancient secrets. Your task is to help the adventurers navigate through the forest, solve puzzles, and make decisions that will lead them to their ultimate goal: finding the legendary Crystal of Light.
+
+Prompt Details:
+
+Setting the Scene:
+Describe the Enchanted Forest with vivid imagery. Mention the towering trees with glowing leaves, the sparkling streams, and the mysterious mist that hangs in the air.
+Introduce the adventurers: a brave knight, a wise wizard, a cunning rogue, and a curious elf. Each character has unique abilities and personalities.
+Challenges and Puzzles:
+Create a series of challenges that the adventurers must overcome. These could include riddles, physical obstacles, and magical barriers.
+Example Challenge: The adventurers come across a talking tree that asks them a riddle. If they answer correctly, the tree will reveal a hidden path."""
             }
         ]
 
@@ -235,7 +238,6 @@ def prepare_model_args(request_body, request_headers):
                         "context": context_obj
                     }
                 )
-                logging.debug(message["content"], context_obj)
             else:
                 messages.append(
                     {
@@ -243,15 +245,8 @@ def prepare_model_args(request_body, request_headers):
                         "content": message["content"]
                     }
                 )
-        logging.error(messages)
-        messages.append(
-            {
-                "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
-            })
-
-
-
+    logging.debug(message["content"], context_obj)
+    logging.error(messages)
     user_json = None
     if (MS_DEFENDER_ENABLED):
         authenticated_user_details = get_authenticated_user_details(request_headers)

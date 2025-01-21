@@ -210,11 +210,17 @@ async def init_cosmosdb_client():
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
     messages = []
+    messages = [
+            {
+                "role": "system",
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
+            }
+        ]
     if not app_settings.datasource:
         messages = [
             {
                 "role": "system",
-                "content": app_settings.azure_openai.system_message
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
             }
         ]
 
@@ -225,19 +231,27 @@ def prepare_model_args(request_body, request_headers):
                 messages.append(
                     {
                         "role": message["role"],
-                        "content": "What is 2+2?",
+                        "content": message["content"],
                         "context": context_obj
                     }
                 )
+                logging.debug(message["content"], context_obj)
             else:
                 messages.append(
                     {
                         "role": message["role"],
-                        "content": "What is 2+2?"
+                        "content": message["content"]
                     }
                 )
-    logging.debug(message["content"], context_obj)
-    logging.error(messages)
+        logging.error(messages)
+        messages.append(
+            {
+                "role": "system",
+                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
+            })
+
+
+
     user_json = None
     if (MS_DEFENDER_ENABLED):
         authenticated_user_details = get_authenticated_user_details(request_headers)
@@ -355,6 +369,7 @@ async def send_chat_request(request_body, request_headers):
     except Exception as e:
         logging.exception("Exception in send_chat_request")
         raise e
+    logging.debug(**model_args)
 
     return response, apim_request_id
 
@@ -784,7 +799,41 @@ async def delete_all_conversations():
 
 @bp.route("/history/clear", methods=["POST"])
 async def clear_messages():
-    exit()
+    await cosmos_db_ready.wait()
+    ## get the user id from the request headers
+    authenticated_user = get_authenticated_user_details(request_headers=request.headers)
+    user_id = authenticated_user["user_principal_id"]
+
+    ## check request for conversation_id
+    request_json = await request.get_json()
+    conversation_id = request_json.get("conversation_id", None)
+
+    try:
+        if not conversation_id:
+            return jsonify({"error": "conversation_id is required"}), 400
+
+        ## make sure cosmos is configured
+        if not current_app.cosmos_conversation_client:
+            raise Exception("CosmosDB is not configured or not working")
+
+        ## delete the conversation messages from cosmos
+        deleted_messages = await current_app.cosmos_conversation_client.delete_messages(
+            conversation_id, user_id
+        )
+
+        return (
+            jsonify(
+                {
+                    "message": "Successfully deleted messages in conversation",
+                    "conversation_id": conversation_id,
+                }
+            ),
+            200,
+        )
+    except Exception as e:
+        logging.exception("Exception in /history/clear_messages")
+        return jsonify({"error": str(e)}), 500
+
 
 @bp.route("/history/ensure", methods=["GET"])
 async def ensure_cosmos():

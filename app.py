@@ -901,5 +901,7 @@ async def generate_title(conversation_messages) -> str:
         logging.exception("Exception while generating title", e)
         return messages[-2]["content"]
 
+print("haa")
+logging.error("hhha")
 
 app = create_app()

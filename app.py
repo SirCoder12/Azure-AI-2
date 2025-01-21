@@ -243,7 +243,7 @@ def prepare_model_args(request_body, request_headers):
                         "content": message["content"]
                     }
                 )
-        logging.error(messages)
+        logging.error(f"{messages} HHHHH")
         messages.append(
             {
                 "role": "system",

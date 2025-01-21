@@ -228,7 +228,7 @@ def prepare_model_args(request_body, request_headers):
                         "context": context_obj
                     }
                 )
-                print(message["content"], context_obj)
+                logging.debug(message["content"], context_obj)
             else:
                 messages.append(
                     {

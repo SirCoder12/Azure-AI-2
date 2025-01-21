@@ -16,6 +16,11 @@ from quart import (
     render_template,
     current_app,
 )
+@app.route('/submit', methods=['POST'])
+def submit():
+    selected_option = request.form.get('dropdown')
+    return f'You selected: {selected_option}'
+
 
 from openai import AsyncAzureOpenAI
 from azure.identity.aio import (
@@ -66,6 +71,7 @@ async def index():
         "index.html",
         title=app_settings.ui.title,
         favicon=app_settings.ui.favicon
+        options=['Option 1', 'Option 2', 'Option 3']
     )
 
 

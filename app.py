@@ -209,6 +209,12 @@ async def init_cosmosdb_client():
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
     messages = []
+    messages = [
+            {
+                "role": "system",
+                "content": "You are an AI assistent, that speaks like Master Yoda. Hahhuuhahah"
+            }
+        ]
     if not app_settings.datasource:
         messages = [
             {

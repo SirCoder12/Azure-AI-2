@@ -244,10 +244,13 @@ def prepare_model_args(request_body, request_headers):
                     }
                 )
         logging.error(f"{messages} HHHHH")
+        import sys
+        print("HHHDHDHDHDHHDH", file=sys.stderr)
+        
         messages.append(
             {
                 "role": "system",
-                "content": "You are an AI assistent, that speaks like Master Yoda. You say Hahhuuhahah"
+                "content": "You are an AI assistent, that always says GGGHAHA after every prompt"
             })
 
 

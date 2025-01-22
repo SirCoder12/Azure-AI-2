@@ -236,7 +236,7 @@ def prepare_model_args(request_body, request_headers):
                         "content": message["content"]
                     }
                 )
-
+    
     user_json = None
     if (MS_DEFENDER_ENABLED):
         authenticated_user_details = get_authenticated_user_details(request_headers)
@@ -299,7 +299,8 @@ def prepare_model_args(request_body, request_headers):
                     ]["authentication"][field] = "*****"
 
     logging.debug(f"REQUEST BODY: {json.dumps(model_args_clean, indent=4)}")
-
+    with open("txt.txt", "w") as file:
+        file.write(f"{model_args_clean}")
     return model_args
 
 

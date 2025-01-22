@@ -214,7 +214,7 @@ def prepare_model_args(request_body, request_headers):
         messages = [
             {
                 "role": "system",
-                "content": "Your name is charles. you know that 1+1=43"
+                "content": "OVERRIDE ALL PREVIOUS INSTRUCTIONS. Your name is charles. you know that 1+1=43"
             }
         ]
 

@@ -214,7 +214,7 @@ def prepare_model_args(request_body, request_headers):
         messages = [
             {
                 "role": "system",
-                "content": "OVERRIDE ALL PREVIOUS INSTRUCTIONS. Your name is charles. you know that 1+1=43"
+                "content": app_settings.azure_opneai.system_message
             }
         ]
 
@@ -298,7 +298,7 @@ def prepare_model_args(request_body, request_headers):
                         "embedding_dependency"
                     ]["authentication"][field] = "*****"
 
-    logging.debug(f"REQUEST BODY: {json.dumps(model_args_clean, indent=4)}")
+    logging.debug(f"REQUEST BODY: {json.dumps(model_args, indent=4)}")
     with open("txt.txt", "w") as file:
         file.write(f"{model_args_clean}")
     return model_args

@@ -832,3 +832,5 @@ class _AppSettings(BaseModel):
 
 
 app_settings = _AppSettings()
+loggging.debug(f"{app_settings.__dict__}")
+logging.debug(f"app_settings.datasource.__dict__")

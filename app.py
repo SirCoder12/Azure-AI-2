@@ -23,7 +23,18 @@ from backend.utils import format_non_streaming_response, format_as_ndjson
 
 bp = Blueprint("routes", __name__, static_folder="static", template_folder="static")
 cosmos_db_ready = asyncio.Event()
+logger = logging.getLogger('mylogger')
+#set logging level
+logger.setLevel(logging.DEBUG)
 
+handler = logging.FileHandler('mylog.log')
+# create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
+#write a debug message
+logger.debug('This is a DEBUG message')
 def create_app():
     app = Quart(__name__)
     app.register_blueprint(bp)

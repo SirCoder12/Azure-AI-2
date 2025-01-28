@@ -94,11 +94,11 @@ frontend_settings = {
         app_settings.chat_history.enable_feedback
     ),
     "ui": {
-        "title": app_settings.ui.title,
+        "title": "Kyoshki Murasaki",
         "logo": app_settings.ui.logo,
         "chat_logo": app_settings.ui.chat_logo or app_settings.ui.logo,
-        "chat_title": app_settings.ui.chat_title,
-        "chat_description": app_settings.ui.chat_description,
+        "chat_title": "Gokunoban",
+        "chat_description": "Kuko Henko Karasu to Shomyo Hyori no Hazama",
         "show_share_button": app_settings.ui.show_share_button,
         "show_chat_history_button": app_settings.ui.show_chat_history_button,
     },

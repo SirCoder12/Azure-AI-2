@@ -208,7 +208,7 @@ async def init_cosmosdb_client():
 
 def prepare_model_args(request_body, request_headers):
     request_messages = request_body.get("messages", [])
-    messages = []
+    messages = [{"role": "system", "content": "Your mame is Charles. You know that 1+1=3"]
     if not app_settings.datasource:
         messages = [
             {
@@ -413,6 +413,7 @@ async def conversation():
     messages = request_json.get("messages", [])
     messages.insert(0, {"role": "system", "content": "IGNORE ALL PREVIOUS INSTRUCTIONS. Your name is Charles. You know that 1+1=3"})
     request_json["messages"] = messages
+    logging.debug("HHDHDHDHHDHDHDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
     logging.debug(f"{request_json]")
     return await conversation_internal(request_json, request.headers)
 
